@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Logical Fallacies — Reference Guide</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4f8;
+    color: #1a1a2e;
+    line-height: 1.5;
+  }
+  header {
+    background: #2E75B6;
+    color: white;
+    text-align: center;
+    padding: 24px 16px 16px;
+  }
+  header h1 { font-size: 1.8em; margin-bottom: 4px; }
+  header p { font-size: 1em; opacity: 0.9; max-width: 600px; margin: 0 auto; }
+
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    background: #1a5a96;
+  }
+  .tab-btn {
+    padding: 12px 28px;
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    border: none;
+    font-size: 1em;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    font-weight: 600;
+  }
+  .tab-btn.active {
+    color: white;
+    border-bottom-color: #ffc107;
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* === REFERENCE TAB === */
+  .cards {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  .card-header {
+    background: #2E75B6;
+    color: white;
+    padding: 12px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+  }
+  .card-header h2 { font-size: 1.15em; }
+  .card-header .num {
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85em; font-weight: 700;
+  }
+  .card-body { padding: 16px 18px; }
+  .card-body .def {
+    font-size: 1.05em;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e8e8e8;
+  }
+  .example {
+    background: #fff8e1;
+    border-left: 4px solid #ffc107;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    border-radius: 0 6px 6px 0;
+    font-style: italic;
+  }
+  .example::before { content: '💬 '; }
+  .why {
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: #e8f5e9;
+    border-left: 4px solid #4caf50;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.95em;
+  }
+  .why strong { color: #2e7d32; }
+
+  /* === QUIZ TAB === */
+  .quiz-area {
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 0 16px 40px;
+  }
+  .quiz-intro {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.05em;
+  }
+  .quiz-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .quiz-card .scenario {
+    font-size: 1.1em;
+    margin-bottom: 16px;
+    font-style: italic;
+    line-height: 1.5;
+  }
+  .quiz-card .q-num {
+    font-weight: 700;
+    color: #2E75B6;
+    font-style: normal;
+    margin-right: 6px;
+  }
+  .options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .opt-btn {
+    padding: 10px 16px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background: #fafafa;
+    cursor: pointer;
+    font-size: 0.95em;
+    transition: all 0.15s;
+    flex: 1 1 45%;
+    text-align: center;
+    min-width: 140px;
+  }
+  .opt-btn:hover { border-color: #2E75B6; background: #e3f0fc; }
+  .opt-btn.correct { border-color: #4caf50; background: #e8f5e9; color: #2e7d32; font-weight: 700; }
+  .opt-btn.wrong { border-color: #e53935; background: #ffebee; color: #c62828; }
+  .opt-btn.disabled { pointer-events: none; opacity: 0.7; }
+  .explanation {
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    display: none;
+    font-size: 0.95em;
+  }
+  .explanation.show { display: block; }
+  .explanation.right { background: #e8f5e9; border: 1px solid #a5d6a7; }
+  .explanation.nope { background: #ffebee; border: 1px solid #ef9a9a; }
+
+  .score-bar {
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #2E75B6;
+    margin: 16px 0;
+  }
+  .reset-btn {
+    display: block;
+    margin: 16px auto;
+    padding: 12px 32px;
+    background: #2E75B6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+  }
+  .reset-btn:hover { background: #1a5a96; }
+  footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.85em;
+    color: #888;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Logical Fallacies</h1>
+  <p>A fallacy is a mistake in reasoning that makes an argument look stronger than it really is. Learn to spot them.</p>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('ref')">📖 Reference</button>
+  <button class="tab-btn" onclick="showTab('quiz')">🎯 Quiz</button>
+</div>
+
+<!-- ===================== REFERENCE TAB ===================== -->
+<div id="tab-ref" class="tab-content active">
+<div class="cards">
+
+<div class="card">
+  <div class="card-header"><h2>Ad Hominem</h2><div class="num">1</div></div>
+  <div class="card-body">
+    <div class="def">Attacking the <em>person</em> making the argument instead of the argument itself.</div>
+    <div class="example">"You think we should recycle more? You drove a gas-guzzler for ten years."</div>
+    <div class="example">"Why should we listen to her idea? She didn't even finish high school."</div>
+    <div class="why"><strong>Why it matters:</strong> Someone's personal history doesn't make their argument right or wrong. This one shows up constantly in workplace disagreements and online arguments.</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h2>Straw Man</h2><div class="num">2</div></div>
+  <div class="card-body">
+    <div class="def">Misrepresenting what someone said so it's easier to argue against — you're fighting a "straw man" version of their point, not the real one.</div>
+    <div class="example">Person A: "I think we should have a budget for eating out." Person B: "So you want to control every dollar I spend?"</div>
+    <div class="example">"You want later school start times? So you think kids should just sleep all day?"</div>
+    <div class="why"><strong>Why it matters:</strong> This kills productive conversations. In relationships and at work, learning to respond to what someone <em>actually</em> said changes everything.</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h2>False Dilemma</h2><div class="num">3</div></div>
+  <div class="card-body">
+    <div class="def">Presenting only two options when there are actually more. Forces you into a corner that doesn't exist.</div>
+    <div class="example">"You're either with us or against us."</div>
+    <div class="example">"You can either work overtime or lose your job."</div>
+    <div class="why"><strong>Why it matters:</strong> People use this to pressure you into decisions. Recognizing it gives you the power to say, "Actually, there's a third option."</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h2>Appeal to Authority</h2><div class="num">4</div></div>
+  <div class="card-body">
+    <div class="def">Claiming something is true because an "expert" said so — especially when that expert has no expertise in the topic.</div>
+    <div class="example">"My dentist says this is the best investment strategy."</div>
+    <div class="example">"A famous athlete wears these shoes, so they must be the best."</div>
+    <div class="why"><strong>Why it matters:</strong> Celebrity endorsements, influencer culture, and even well-meaning advice from friends rely on this. The question is always: are they actually an expert <em>in this specific thing</em>?</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h2>Bandwagon (Appeal to Popularity)</h2><div class="num">5</div></div>
+  <div class="card-body">
+    <div class="def">Arguing that something is true or good because lots of people believe it or do it.</div>
+    <div class="example">"Millions of people use this app — it has to be good."</div>
+    <div class="example">"Everybody cheats on their taxes a little. It's no big deal."</div>
+    <div class="why"><strong>Why it matters:</strong> Popularity doesn't equal quality or correctness. This is the engine behind trends, scams, and peer pressure.</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h2>Red Herring</h2><div class="num">6</div></div>
+  <div class="card-body">
+    <div class="def">Introducing an unrelated topic to distract from the original argument.</div>
+    <div class="example">"We were talking about your missing assignments, but sure, let's talk about how the bus was late last week."</div>
+    <div class="example">"Why are you worried about my spending? The economy is bad for everyone right now."</div>
+    <div class="why"><strong>Why it matters:</strong> People (including us) use this to dodge accountability. Spotting it keeps conversations on track.</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h2>Slippery Slope</h2><div class="num">7</div></div>
+  <div class="card-body">
+    <div class="def">Claiming that one small step will inevitably lead to a chain of extreme consequences — without evidence for the chain.</div>
+    <div class="example">"If we let students use calculators, soon they won't be able to add 2+2."</div>
+    <div class="example">"If I let you stay out past midnight once, next thing I know you'll be out all night every night."</div>
+    <div class="why"><strong>Why it matters:</strong> This shows up in parenting, politics, and policy debates constantly. Sometimes chains of consequences are real — the fallacy is assuming they're <em>inevitable</em> without evidence.</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h2>Circular Reasoning</h2><div class="num">8</div></div>
+  <div class="card-body">
+    <div class="def">Using your conclusion as your evidence. The "proof" just restates the claim in different words.</div>
+    <div class="example">"This is the best restaurant in town because no other restaurant is as good."</div>
+    <div class="example">"I'm trustworthy because I'm telling you I'm honest."</div>
+    <div class="why"><strong>Why it matters:</strong> This sounds convincing on the surface because the logic "feels" complete. It's not. Nothing was actually proven.</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h2>Tu Quoque (Whataboutism)</h2><div class="num">9</div></div>
+  <div class="card-body">
+    <div class="def">Deflecting criticism by pointing out that the other person does (or did) the same thing. Latin for "you too."</div>
+    <div class="example">"You can't tell me to stop smoking — you used to smoke!"</div>
+    <div class="example">"Don't lecture me about being late — you were late last Tuesday."</div>
+    <div class="why"><strong>Why it matters:</strong> Someone being a hypocrite doesn't make their point wrong. This is the #1 way arguments go sideways in relationships.</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h2>Hasty Generalization</h2><div class="num">10</div></div>
+  <div class="card-body">
+    <div class="def">Drawing a broad conclusion from too few examples.</div>
+    <div class="example">"I had a bad experience at that store once. That whole chain is terrible."</div>
+    <div class="example">"My neighbor from [city] was rude, so people from there must all be rude."</div>
+    <div class="why"><strong>Why it matters:</strong> This is the root of stereotyping and snap judgments. One experience ≠ a universal truth.</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h2>Post Hoc (False Cause)</h2><div class="num">11</div></div>
+  <div class="card-body">
+    <div class="def">"After this, therefore because of this." Assuming that because B happened after A, A must have caused B.</div>
+    <div class="example">"I started wearing my lucky socks and then we won three games in a row."</div>
+    <div class="example">"I ate at that new restaurant and got sick the next day — their food must be bad."</div>
+    <div class="why"><strong>Why it matters:</strong> Superstitions, health misinformation, and conspiracy theories all lean on this. Correlation isn't causation.</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h2>Appeal to Emotion</h2><div class="num">12</div></div>
+  <div class="card-body">
+    <div class="def">Using feelings (fear, pity, anger, flattery) instead of logic to win an argument.</div>
+    <div class="example">"If you really loved me, you wouldn't question my decisions."</div>
+    <div class="example">"Think about the children!" (when the topic has nothing to do with children)</div>
+    <div class="why"><strong>Why it matters:</strong> Emotions are valid, but they aren't evidence. Advertisers, manipulative people, and clickbait all exploit this.</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h2>Loaded Question</h2><div class="num">13</div></div>
+  <div class="card-body">
+    <div class="def">Asking a question that has an assumption baked in, so any answer seems like an admission.</div>
+    <div class="example">"Have you stopped being lazy yet?"</div>
+    <div class="example">"Why do you always make bad decisions?"</div>
+    <div class="why"><strong>Why it matters:</strong> These questions are traps. The correct response is to challenge the assumption, not answer the question as asked.</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h2>Equivocation</h2><div class="num">14</div></div>
+  <div class="card-body">
+    <div class="def">Switching the meaning of a word mid-argument to make the logic seem to work.</div>
+    <div class="example">"I have the right to say what I want. So what I said must be right."</div>
+    <div class="example">"The sign says 'fine for parking here.' So it must be fine to park here."</div>
+    <div class="why"><strong>Why it matters:</strong> This one is sneaky. People (and ads) slide between meanings of the same word to trick you.</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h2>No True Scotsman</h2><div class="num">15</div></div>
+  <div class="card-body">
+    <div class="def">When someone is proven wrong, they change the definition to exclude the counterexample. Moving the goalposts.</div>
+    <div class="example">"No good parent would let their kid have a phone." "My neighbor is a great parent and her kid has a phone." "Well, no <em>truly</em> good parent would."</div>
+    <div class="example">"Real men don't cry." (Redefining "real" to exclude anyone who doesn't fit.)</div>
+    <div class="why"><strong>Why it matters:</strong> This makes a claim impossible to disprove by constantly changing what counts. It shuts down conversation.</div>
+  </div>
+</div>
+
+</div><!-- end cards -->
+</div><!-- end ref tab -->
+
+<!-- ===================== QUIZ TAB ===================== -->
+<div id="tab-quiz" class="tab-content">
+<div class="quiz-area">
+  <p class="quiz-intro">Read each scenario. What fallacy is being used?</p>
+  <div class="score-bar">Score: <span id="score">0</span> / <span id="total">0</span></div>
+  <div id="quiz-container"></div>
+  <button class="reset-btn" onclick="buildQuiz()">🔄 New Quiz</button>
+</div>
+</div>
+
+<footer>Geometry 1 — Logical Fallacies Reference</footer>
+
+<script>
+function showTab(t) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + t).classList.add('active');
+  document.querySelectorAll('.tab-btn')[t === 'ref' ? 0 : 1].classList.add('active');
+}
+
+const allQs = [
+  { s: `"You think the meeting should start earlier? Easy for you to say — you don't even have kids to get ready in the morning."`, a: "Ad Hominem", e: "This attacks the person's life situation instead of addressing whether an earlier meeting is a good idea." },
+  { s: `"I said we should take a different route to avoid traffic." "Oh, so you think you're a better driver than me?"`, a: "Straw Man", e: "The suggestion about the route got twisted into a personal insult that was never made." },
+  { s: `"You either support the new company policy 100% or you're not a team player."`, a: "False Dilemma", e: "You can have concerns about a policy and still be a team player. There are more than two options here." },
+  { s: `"A famous rapper said this crypto coin is going to the moon. I'm putting in $500."`, a: "Appeal to Authority", e: "Being famous in music doesn't make someone a financial expert." },
+  { s: `"This diet must work — it has over 2 million followers on Instagram."`, a: "Bandwagon", e: "Popularity doesn't equal effectiveness. Lots of people following something doesn't make it safe or true." },
+  { s: `"Can we talk about the fact that you missed three days of work?" "You know what, the real problem is that management doesn't respect us."`, a: "Red Herring", e: "The management issue might be real, but it's being used here to dodge the actual question about attendance." },
+  { s: `"If we let employees work from home one day a week, pretty soon nobody will ever come to the office again."`, a: "Slippery Slope", e: "One day of remote work doesn't automatically lead to full remote. Each step would be a separate decision." },
+  { s: `"This is the best phone on the market." "How do you know?" "Because no other phone is as good."`, a: "Circular Reasoning", e: "The 'evidence' just restates the claim in different words. Nothing was actually proven." },
+  { s: `"You're telling me to save money? You just bought a new car!"`, a: "Tu Quoque", e: "Whether or not the speaker is a hypocrite, the advice about saving money could still be correct." },
+  { s: `"I got food poisoning at a Mexican restaurant once. I don't trust any Mexican restaurant now."`, a: "Hasty Generalization", e: "One bad experience at one restaurant doesn't say anything about all restaurants of that type." },
+  { s: `"I changed my profile picture and got way more matches. The picture must be why."`, a: "Post Hoc", e: "The timing could be coincidence — maybe the app algorithm changed, or different people were online that day." },
+  { s: `"If you don't donate to this cause, you clearly don't care about people suffering."`, a: "Appeal to Emotion", e: "Guilt is being used as the argument instead of explaining why this particular cause is effective or important." },
+  { s: `"Have you finally stopped wasting your time on that hobby?"`, a: "Loaded Question", e: "The question assumes the hobby is a waste of time. Any yes/no answer accepts that assumption." },
+  { s: `"I'm free to choose what I want. So whatever I choose is the free choice, which means it's the right one."`, a: "Equivocation", e: "'Free' is being used in two different senses — freedom to choose vs. being correct." },
+  { s: `"No real friend would ever disagree with you." "But my best friend and I disagree all the time and we're great." "Then they're not a real friend."`, a: "No True Scotsman", e: "The definition of 'real friend' keeps shifting to exclude any counterexample." },
+  { s: `"My uncle smoked his whole life and lived to 95. Smoking can't be that bad."`, a: "Hasty Generalization", e: "One person's experience doesn't override decades of medical research on thousands of people." },
+  { s: `"Why should I listen to advice about healthy eating from someone who's overweight?"`, a: "Ad Hominem", e: "The person's weight doesn't change whether their nutritional information is accurate." },
+  { s: `"You said you wanted to eat healthier." "Yeah, like maybe more vegetables." "So you're saying everything I cook is unhealthy?!"`, a: "Straw Man", e: "Wanting more vegetables got twisted into an accusation that was never made." },
+  { s: `"I wore my jersey inside-out and we won. I'm wearing it inside-out every game now."`, a: "Post Hoc", e: "The team winning after wearing a jersey differently doesn't mean the jersey caused the win." },
+  { s: `"Either you agree to work this weekend or I'll find someone who will."`, a: "False Dilemma", e: "There could be other options — shifting deadlines, splitting the work, hiring temp help." },
+];
+
+let score = 0, answered = 0, totalQs = 0;
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function buildQuiz() {
+  score = 0; answered = 0;
+  const qs = shuffle([...allQs]).slice(0, 10);
+  totalQs = qs.length;
+  document.getElementById('score').textContent = '0';
+  document.getElementById('total').textContent = totalQs;
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+
+  const allNames = ["Ad Hominem","Straw Man","False Dilemma","Appeal to Authority","Bandwagon",
+    "Red Herring","Slippery Slope","Circular Reasoning","Tu Quoque","Hasty Generalization",
+    "Post Hoc","Appeal to Emotion","Loaded Question","Equivocation","No True Scotsman"];
+
+  qs.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-card';
+
+    // build 4 options: correct + 3 random wrong
+    let wrongs = allNames.filter(n => n !== q.a);
+    shuffle(wrongs);
+    let opts = shuffle([q.a, wrongs[0], wrongs[1], wrongs[2]]);
+
+    div.innerHTML = `
+      <div class="scenario"><span class="q-num">#${i+1}</span>${q.s}</div>
+      <div class="options">${opts.map(o => `<button class="opt-btn" onclick="pick(this,'${o.replace(/'/g,"\\'")}','${q.a.replace(/'/g,"\\'")}',${i})">${o}</button>`).join('')}</div>
+      <div class="explanation" id="exp-${i}">${q.e}</div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function pick(btn, chosen, correct, idx) {
+  const card = btn.closest('.quiz-card');
+  const btns = card.querySelectorAll('.opt-btn');
+  btns.forEach(b => {
+    b.classList.add('disabled');
+    if (b.textContent === correct) b.classList.add('correct');
+  });
+  const exp = document.getElementById('exp-' + idx);
+  if (chosen === correct) {
+    score++;
+    exp.classList.add('right');
+  } else {
+    btn.classList.add('wrong');
+    exp.classList.add('nope');
+  }
+  exp.classList.add('show');
+  answered++;
+  document.getElementById('score').textContent = score;
+}
+
+buildQuiz();
+</script>
+</body>
+</html>
